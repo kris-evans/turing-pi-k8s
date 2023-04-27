@@ -1,15 +1,28 @@
-# turing-pi-k8s
+# TuringPi K8S Ansible
 
+## Prerequisites
 
-## ansible
+* Python3g
 
-List Nodes
+## Getting Started
+
+1. Clone the repo 
+
+2. Activate the venv
+
+```
+source ./bin/activate
+```
+
+## Ansible Commands
+
+### List Nodes
 
 ```
 ansible all -i ./inventory --list-hosts
 ```
 
-Ping Nodes
+### gPing Nodes
 
 ```
 ansible all -m ping -i ./inventory.yaml
