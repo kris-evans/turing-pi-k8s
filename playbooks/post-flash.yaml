@@ -1,0 +1,13 @@
+- name: Post-flash
+  hosts: turing
+  tasks:
+   - name: apt update
+     ansible.builtin.apt:
+       name: "*"
+       state: latest
+       update_cache: true
+   - name: apt upgrade
+     ansible.builtin.apt:
+       state: latest
+       update_cache: false
+       upgrade: safe
