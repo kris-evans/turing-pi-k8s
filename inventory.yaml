@@ -1,12 +1,21 @@
-turing:
+turing_nodes:
   hosts:
-    pi01:
+    turing_node_1:
       ansible_host: 192.168.1.166
-    pi02:
+      ansible_hostname: "turing-node-1"
+    turing_node_2:
       ansible_host: 192.168.1.167
-    pi03:
+      ansible_hostname: "turing-node-2"
+    turing_node_3:
       ansible_host: 192.168.1.168
-    pi04:
+      ansible_hostname: "turing-node-3"
+    turing_node_4:
       ansible_host: 192.168.1.169
+      ansible_hostname: "turing-node-4"
   vars:
     ansible_user: root
+
+kubernetes_masters:
+  hosts:
+    turing_node_1:
+      ansible_host: 192.168.1.166
