@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* Python3g
+* Python3
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ source ./bin/activate
 ansible all -i ./inventory --list-hosts
 ```
 
-### gPing Nodes
+### Ping Nodes
 
 ```
 ansible all -m ping -i ./inventory.yaml
