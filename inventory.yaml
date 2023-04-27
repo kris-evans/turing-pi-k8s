@@ -1,0 +1,10 @@
+turing:
+  hosts:
+    pi01:
+      ansible_host: 192.168.1.166
+    pi02:
+      ansible_host: 192.168.1.167
+    pi03:
+      ansible_host: 192.168.1.168
+    pi04:
+      ansible_host: 192.168.1.169      
