@@ -1,0 +1,12 @@
+- name: Kubernetes Agent
+  hosts: kubernetes_agents
+  tasks:
+    - name: Install K3S
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | K3S_URL=https://192.168.1.166:6443 K3S_TOKEN=myrandompassword sh - > /tmp/k3s.log
+        exit 0
+      args:
+        creates: k3s.log
+    - name: Label agents
+      ansible.builtin.shell: |
+        kubectl label nodes {{ ansible_hostname }} kubernetes.io/role=worker > /tmp/k3s.log

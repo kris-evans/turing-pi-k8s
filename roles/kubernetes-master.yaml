@@ -1,0 +1,26 @@
+- name: Kubernetes Master
+  hosts: kubernetes_masters
+  tasks:
+    - name: install k3s
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644 --disable servicelb --token myrandompassword --node-ip {{ ansible_host }} --disable-cloud-controller --disable local-storage >> /tmp/k3s.log
+        exit 0
+      args:
+        creates: /tmp/k3s.log
+    - name: apt install git
+      ansible.builtin.apt:
+        name: git
+        state: present
+    - name: create .profile
+      ansible.builtin.file:
+        path: /root/.profile
+        owner: root
+        group: root
+        mode: u+rw
+    - name: add KUBECONFIG to .profile
+      ansible.builtin.lineinfile:
+        path: /root/.profile
+        line: "KUBECONFIG=~/.kube/config"
+    - name: add k3s config to kubeconfig file
+      ansible.builtin.shell: |
+        k3s kubectl config view --raw > "$KUBECONFIG"
