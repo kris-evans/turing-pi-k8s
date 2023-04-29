@@ -1,0 +1,30 @@
+- name: Kubernetes Networking
+  hosts: kubernetes_control_nodes
+  tasks:
+    - name: install python prerequisites
+      ansible.builtin.pip:
+        name:
+          - pyyaml
+    - name: add metallb repository to helm
+      kubernetes.core.helm_repository:
+        name: metallb
+        repo_url: https://metallb.github.io/metallb
+    - name: deploy metallb to metallb-system namespace
+      kubernetes.core.helm:
+        name: metallb
+        chart_ref: metallb/metallb
+        release_namespace: metallb-system
+        create_namespace: true
+    - name: copy metallb.yaml to control node
+      ansible.builtin.copy:
+        src: ./../etc/helm/metallb.yaml
+        dest: /tmp/metallb.yaml
+        owner: root
+        group: root
+        mode: u+rw
+    - name: apply metallb configuration
+      ansible.builtin.shell: |
+        kubectl apply -f /tmp/metallb.yaml >> /tmp/metallb.log
+        exit 0
+      args:
+        creates: /tmp/metallb.log

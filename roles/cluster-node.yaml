@@ -1,5 +1,5 @@
-- name: TuringPi Node
-  hosts: turing_nodes
+- name: Cluster Node
+  hosts: cluster_nodes
   tasks:
    - name: apt update
      ansible.builtin.apt:

@@ -1,5 +1,5 @@
 - name: Kubernetes Master
-  hosts: kubernetes_masters
+  hosts: kubernetes_control_nodes
   tasks:
     - name: install k3s
       ansible.builtin.shell: |
@@ -17,10 +17,43 @@
         owner: root
         group: root
         mode: u+rw
-    - name: add KUBECONFIG to .profile
-      ansible.builtin.lineinfile:
-        path: /root/.profile
-        line: "KUBECONFIG=~/.kube/config"
-    - name: add k3s config to kubeconfig file
+    - name: add config view to ~/.kube/config
       ansible.builtin.shell: |
-        k3s kubectl config view --raw > "$KUBECONFIG"
+        k3s kubectl config view --raw >> /root/.kube/config
+        exit 0
+      args:
+        creates: /root/.kube/config
+    - name: add KUBECONFIG to /etc/environment
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        line: "KUBECONFIG=/root/.kube/config"
+    - name: create helm directory
+      ansible.builtin.file:
+        path: /root/helm
+        state: directory
+    - name: download get_helm.sh
+      ansible.builtin.shell: |
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      args:
+        chdir: /root/helm
+        creates: get_helm.sh
+    - name: make get_helm.sh executable
+      ansible.builtin.file:
+        path: /root/helm/get_helm.sh
+        owner: root
+        group: root
+        mode: u+rwx
+        state: file
+    - name: install helm
+      ansible.builtin.shell: |
+        ./get_helm.sh >> /tmp/helm.log
+        exit 0
+      args:
+        chdir: /root/helm
+        creates: /tmp/helm.log
+    - name: install arcade
+      ansible.builtin.shell: |
+        curl -sLS https://get.arkade.dev | sudo sh >> arcade.log
+        exit 0
+      args:
+        creates: /tmp/arcade.log

@@ -1,5 +1,5 @@
 - name: Kubernetes Agent
-  hosts: kubernetes_agents
+  hosts: kubernetes_agent_nodes
   tasks:
     - name: Install K3S
       ansible.builtin.shell: |
