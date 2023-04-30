@@ -30,3 +30,7 @@
      ansible.builtin.apt:
        name: iptables
        state: present
+   - name: apt install nfs-common
+     ansible.builtin.apt:
+       name: nfs-common
+       state: present

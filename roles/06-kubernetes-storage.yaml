@@ -1,0 +1,18 @@
+- name: Kubernetes Network
+  hosts: kubernetes_control_nodes
+  tasks:
+    - name: add nfs-subdir-external-provisioner repository to helm
+      kubernetes.core.helm_repository:
+        name: nfs-subdir-external-provisioner
+        repo_url: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+    - name: deploy nfs-subdir-external-provisioner to nfs-system namespace
+      kubernetes.core.helm:
+        name: nfs-subdir-external-provisioner
+        chart_ref: nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
+        release_namespace: nfs-system
+        create_namespace: true
+        set_values:
+          - value: nfs.server=192.168.1.168
+            value_type: raw
+          - value: nfs.path=/data
+            value_type: raw
