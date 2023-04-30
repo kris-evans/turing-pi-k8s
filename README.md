@@ -1,5 +1,7 @@
 # TuringPi K8S Ansible
 
+This set of Ansible playbooks implements [the guide at turingpi.com](https://help.turingpi.com/hc/en-us/articles/8942873470877-The-plan) to setup a K3S cluster on top of a Turing Pi 2 cluster. 
+
 ## Prerequisites
 
 * Python3
