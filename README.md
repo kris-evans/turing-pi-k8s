@@ -61,3 +61,11 @@ This role configures metallb in the K3S cluster so you can allocate IP Address t
 ```
 ansible-playbook -i ./inventory.yaml ./roles/kubernetes-network.yaml
 ```
+
+7. Apply storage node role
+
+This role configures the ssd to be mounted at /data.
+
+```
+ansible-playbook -i ./inventory.yaml ./roles/storage-node.yaml
+```
