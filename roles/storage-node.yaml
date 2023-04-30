@@ -19,3 +19,23 @@
         exit 0
       args:
         creates: /tmp/mount.log
+    - name: apt install nfs-server
+      ansible.builtin.apt:
+        name: nfs-server
+        state: present
+    - name: add exports to nfs
+      ansible.builtin.lineinfile:
+        path: /etc/exports
+        line: "/data *(rw,no_subtree_check,no_root_squash)"
+    - name: enable and start nfs-server
+      ansible.builtin.systemd:
+        name: nfs-server
+        enabled: true
+        state: started
+        masked: no
+    - name: reload and rexport /etc/exports
+      ansible.builtin.shell: |
+        exportfs -ar >> /tmp/exportfs.loog
+        exit 0
+      args:
+        creates: /tmp/exportfs.log
