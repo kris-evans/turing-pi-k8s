@@ -53,7 +53,7 @@
         creates: /tmp/helm.log
     - name: install arcade
       ansible.builtin.shell: |
-        curl -sLS https://get.arkade.dev | sudo sh >> arcade.log
+        curl -sLS https://get.arkade.dev | sudo sh >> /tmp/arcade.log
         exit 0
       args:
         creates: /tmp/arcade.log

@@ -32,3 +32,9 @@ kubernetes_agent_nodes:
     turing_node_4:
       ansible_host: 192.168.1.169
       ansible_hostname: "turing-node-4"
+
+storage_nodes:
+  hosts:
+    turing_node_3:
+      ansible_host: 192.168.1.168
+      ansible_hostname: "turing-node-3"
