@@ -1,4 +1,4 @@
-- name: Kubernetes Networking
+- name: Kubernetes Network
   hosts: kubernetes_control_nodes
   tasks:
     - name: install python prerequisites
