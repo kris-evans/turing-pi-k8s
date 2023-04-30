@@ -1,0 +1,22 @@
+- name: Kubernetes Network
+  hosts: kubernetes_control_nodes
+  tasks:
+    - name: add argo-cd repository to helm
+      kubernetes.core.helm_repository:
+        name: argo-cd
+        repo_url: https://argoproj.github.io/argo-helm
+    - name: deploy argo-cd to argo-cd namespace
+      kubernetes.core.helm:
+        name: argo-cd
+        chart_ref: argo-cd/argo-cd
+        release_namespace: argo-cd
+        create_namespace: true
+        set_values:
+          - value: server.service.loadBalancerIP=198.168.1.171
+            value_type: string
+    - name: patch argocd to use metallb dedicated ip address
+      ansible.builtin.shell: |
+        kubectl patch service argo-cd-argocd-server --namespace argo-cd --patch '{ "spec": { "type": "LoadBalancer", "loadBalancerIP": "192.168.1.171" } }' >> /tmp/argocd.log
+        exit 0
+      args:
+        creates: /tmp/argocd.log

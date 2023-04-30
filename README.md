@@ -69,3 +69,11 @@ This role configures metallb in the K3S cluster so you can allocate IP Address t
 ```
 ansible-playbook -i ./inventory.yaml ./roles/05-kubernetes-network.yaml
 ```
+
+7. Apply kubernetes cd role
+
+Configures ArgoCD in the cluster and exposes it on a predefined LB port. 
+
+```
+ansible-playbook -i ./inventory.yaml ./roles/07-kubernetes-cd.yaml
+```
