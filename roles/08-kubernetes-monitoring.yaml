@@ -12,34 +12,10 @@
         release_namespace: monitoring
         create_namespace: true
         values:
-          prometheusOperator:
-            service:
-              type: LoadBalancer
-              loadBalancerIP: 198.168.1.175
-          prometheus:
-            service:
-              type: LoadBalancer
-              loadBalancerIP: 198.168.1.176
-            thanosService:
-              enabled: true
-            thanosServiceMonitor:
-              enabled: true
-            thanosServiceExternal:
-              enabled: true
-              loadBalancerIP: 198.168.1.177
-            prometheusSpec:
-              storageSpec:
-                volumeClaimTemplate:
-                  spec:
-                    storageClassName: nfs-client
-                    accessModes: ["ReadWriteOnce"]
-                    resources:
-                      requests:
-                        storage: 100Gi      
           alertmanager:
             service:
               type: LoadBalancer
-              loadBalancerIp: 198.168.1.178
+              loadBalancerIp: 198.168.1.172
             alertmanagerSpec:
               storage:
                 volumeClaimTemplate:
@@ -49,11 +25,35 @@
                     resources:
                       requests:
                         storage: 50Gi
+          prometheusOperator:
+            service:
+              type: LoadBalancer
+              loadBalancerIP: 198.168.1.173
+          prometheus:
+            service:
+              type: LoadBalancer
+              loadBalancerIP: 198.168.1.174
+            thanosService:
+              enabled: true
+            thanosServiceMonitor:
+              enabled: true
+            thanosServiceExternal:
+              enabled: true
+              loadBalancerIP: 198.168.1.175
+            prometheusSpec:
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: nfs-client
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 100Gi      
           thanosRuler:
             enabled: true
             service:
               type: LoadBalancer
-              loadBalancerIP: 198.168.1.179
+              loadBalancerIP: 198.168.1.176
             thanosRulerSpec:
               storage:
                 volumeClaimTemplate:
@@ -62,7 +62,23 @@
                     accessModes: ["ReadWriteOnce"]
                     resources:
                       requests:
-                        storage: 50Gi              
+                        storage: 50Gi
+          grafana:
+            service:
+              type: LoadBalancer
+              loadBalancerIP: 192.168.1.177
+    - name: patch prometheus to use metallb dedicated ip address
+      ansible.builtin.shell: |
+        kubectl patch service prometheus-kube-prometheus-alertmanager --namespace monitoring --patch '{ "spec": { "type": "LoadBalancer", "loadBalancerIP": "192.168.1.172" } }' > /tmp/prometheus.log
+        kubectl patch service prometheus-kube-prometheus-operator --namespace monitoring --patch '{ "spec": { "type": "LoadBalancer", "loadBalancerIP": "192.168.1.173" } }' > /tmp/prometheus.log
+        kubectl patch service prometheus-kube-prometheus-prometheus --namespace monitoring --patch '{ "spec": { "type": "LoadBalancer", "loadBalancerIP": "192.168.1.174" } }' > /tmp/prometheus.log
+        kubectl patch service prometheus-kube-prometheus-thanos-external --namespace monitoring --patch '{ "spec": { "type": "LoadBalancer", "loadBalancerIP": "192.168.1.175" } }' > /tmp/prometheus.log
+        kubectl patch service kube-prometheus-stack-thanos-ruler --namespace monitoring --patch '{ "spec": { "type": "LoadBalancer", "loadBalancerIP": "192.168.1.176" } }' > /tmp/prometheus.log
+        kubectl patch service prometheus-grafana --namespace monitoring --patch '{ "spec": { "type": "LoadBalancer", "loadBalancerIP": "192.168.1.177" } }' > /tmp/prometheus.log
+        exit 0
+      args:
+        creates: /tmp/prometheus.log
+
                   
 
               
