@@ -2,21 +2,45 @@
 
 This set of Ansible playbooks implements [the guide at turingpi.com](https://help.turingpi.com/hc/en-us/articles/8942873470877-The-plan) to setup a K3S cluster on top of a Turing Pi 2 cluster. 
 
-## Prerequisites
-
-* Python3
+## Cluster URLs ##
+* [Traeffik](http://192.168.1.170/)
+* [ArgoCD](http://192.168.1.171)
+* [AlertManager](http://192.168.1.172:9093)
+* [Prometheus](http:192.168.1.173:9090)
+* [Grafana](http:192.168.1.174)
 
 ## Getting Started
 
+### Prerequisites
+
+* Python3
+* Ansible
+
+### Developng
+
 1. Clone the repo 
 
-2. Activate the venv
+2. cd /path/to/repo
+
+3. Create a venv
 
 ```
-source ./bin/activate
+python -m venv /path/to/project/venv
 ```
 
-## New Cluster Setup
+4. Activate the venv
+
+```
+source /path/to/project/venv/bin/activate
+```
+
+5. Install venv dependencies
+
+```
+/path/to/project/venv/bin/pip install -r ./requirements.txt
+```
+
+### Commands
 
 1. List all nodes
 
@@ -70,10 +94,18 @@ This role configures metallb in the K3S cluster so you can allocate IP Address t
 ansible-playbook -i ./inventory.yaml ./roles/05-kubernetes-network.yaml
 ```
 
-7. Apply kubernetes cd role
+8. Apply kubernetes cd role
 
 Configures ArgoCD in the cluster and exposes it on a predefined LB port. 
 
 ```
 ansible-playbook -i ./inventory.yaml ./roles/07-kubernetes-cd.yaml
+```
+
+9. Apply kubernetes monitoring role
+
+Configures Prometheus, Grafana, and AlertManager.
+
+```
+ansible-playbook -i ./inventory.yaml ./roles/08-kubernetes-monitoring.yaml
 ```
